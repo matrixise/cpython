@@ -12,7 +12,18 @@ PAPER        =
 SOURCES      =
 DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)
 
-ALLSPHINXOPTS = -b $(BUILDER) -d build/doctrees -D latex_elements.papersize=$(PAPER) \
+
+NPROCS:=1
+OS:=$(shell uname -s)
+
+ifeq ($(OS),Linux)
+  NPROCS:=$(shell grep -c ^processor /proc/cpuinfo)
+endif
+ifeq ($(OS),Darwin) # Assume Mac OS X
+  NPROCS:=$(shell system_profiler | awk '/Number Of CPUs/{print $4}{next;}')
+endif
+
+ALLSPHINXOPTS = -j $(NPROCS) -b $(BUILDER) -d build/doctrees -D latex_elements.papersize=$(PAPER) \
                 $(SPHINXOPTS) . build/$(BUILDER) $(SOURCES)
 
 .PHONY: help build html htmlhelp latex text changes linkcheck \
