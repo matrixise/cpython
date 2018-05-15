@@ -2160,7 +2160,7 @@ Visual inspection shows that the certificate does identify the desired service
                        ('DNS', 'python.org'),
                        ('DNS', 'pypi.org'),
                        ('DNS', 'docs.python.org'),
-                       ('DNS', 'testpypi.org'),
+                       ('DNS', 'testpypi.python.org'),
                        ('DNS', 'bugs.python.org'),
                        ('DNS', 'wiki.python.org'),
                        ('DNS', 'hg.python.org'),
