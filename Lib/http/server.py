@@ -1216,7 +1216,7 @@ class CGIHTTPRequestHandler(SimpleHTTPRequestHandler):
                 self.log_message("CGI script exited OK")
 
 
-def test(HandlerClass=BaseHTTPRequestHandler,
+def main(HandlerClass=BaseHTTPRequestHandler,
          ServerClass=ThreadingHTTPServer,
          protocol="HTTP/1.0", port=8000, bind=""):
     """Test the HTTP request handler class.
@@ -1259,4 +1259,4 @@ if __name__ == '__main__':
     else:
         handler_class = partial(SimpleHTTPRequestHandler,
                                 directory=args.directory)
-    test(HandlerClass=handler_class, port=args.port, bind=args.bind)
+    main(HandlerClass=handler_class, port=args.port, bind=args.bind)

@@ -1106,7 +1106,7 @@ class SimpleHTTPRequestHandlerTestCase(unittest.TestCase):
 class MiscTestCase(unittest.TestCase):
     def test_all(self):
         expected = []
-        blacklist = {'executable', 'nobody_uid', 'test'}
+        blacklist = {'executable', 'nobody_uid', 'main'}
         for name in dir(server):
             if name.startswith('_') or name in blacklist:
                 continue
