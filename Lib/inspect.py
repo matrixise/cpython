@@ -1071,7 +1071,8 @@ def getargspec(func):
     based interface, but full support for annotations and keyword-only
     parameters.
 
-    Deprecated since Python 3.5, use `inspect.getfullargspec()`.
+    .. deprecated:: 3.5
+        Use :func:`inspect.getfullargspec`
     """
     warnings.warn("inspect.getargspec() is deprecated since Python 3.0, "
                   "use inspect.signature() or inspect.getfullargspec()",
@@ -1220,8 +1221,8 @@ def formatargspec(args, varargs=None, varkw=None, defaults=None,
     turn names and values into strings.  The last argument is an optional
     function to format the sequence of arguments.
 
-    Deprecated since Python 3.5: use the `signature` function and `Signature`
-    objects.
+    .. deprecated:: 3.5
+        use the :func:`signature` function and `Signature` objects.
     """
 
     from warnings import warn
@@ -2801,7 +2802,8 @@ class Signature:
     def from_function(cls, func):
         """Constructs Signature for the given python function.
 
-        Deprecated since Python 3.5, use `Signature.from_callable()`.
+        .. deprecated:: 3.5
+            Use :mod:`Signature.from_callable()`.
         """
 
         warnings.warn("inspect.Signature.from_function() is deprecated since "
@@ -2813,7 +2815,8 @@ class Signature:
     def from_builtin(cls, func):
         """Constructs Signature for the given builtin function.
 
-        Deprecated since Python 3.5, use `Signature.from_callable()`.
+        .. deprecated:: 3.5
+            Use :mod:`Signature.from_callable()`.
         """
 
         warnings.warn("inspect.Signature.from_builtin() is deprecated since "

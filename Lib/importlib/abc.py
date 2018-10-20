@@ -36,7 +36,7 @@ class Finder(metaclass=abc.ABCMeta):
     implementations should derive from the more specific MetaPathFinder
     or PathEntryFinder ABCs.
 
-    Deprecated since Python 3.3
+    .. deprecated:: 3.3
     """
 
     @abc.abstractmethod
@@ -60,10 +60,9 @@ class MetaPathFinder(Finder):
         If no module is found, return None.  The fullname is a str and
         the path is a list of strings or None.
 
-        This method is deprecated since Python 3.4 in favor of
-        finder.find_spec(). If find_spec() exists then backwards-compatible
-        functionality is provided for this method.
-
+        .. deprecated:: 3.4
+            Use :meth:`finder.find_spec`. If find_spec() exists then
+            backwards-compatible functionality is provided for this method.
         """
         warnings.warn("MetaPathFinder.find_module() is deprecated since Python "
                       "3.4 in favor of MetaPathFinder.find_spec()"
@@ -102,9 +101,9 @@ class PathEntryFinder(Finder):
         The portion will be discarded if another path entry finder
         locates the module as a normal module or package.
 
-        This method is deprecated since Python 3.4 in favor of
-        finder.find_spec(). If find_spec() is provided than backwards-compatible
-        functionality is provided.
+        .. deprecated:: 3.4
+            Use :meth:`finder.find_spec()`. If find_spec() is provided than
+            backwards-compatible functionality is provided.
         """
         warnings.warn("PathEntryFinder.find_loader() is deprecated since Python "
                       "3.4 in favor of PathEntryFinder.find_spec() "
@@ -140,7 +139,7 @@ class Loader(metaclass=abc.ABCMeta):
     def create_module(self, spec):
         """Return a module to initialize and into which to load.
 
-        This method should raise ImportError if anything prevents it
+        This method should raise :exc:`ImportError` if anything prevents it
         from creating a new module.  It may return None to indicate
         that the spec should create the new module.
         """
@@ -156,11 +155,12 @@ class Loader(metaclass=abc.ABCMeta):
         The module must be added to sys.modules and have import-related
         attributes set properly.  The fullname is a str.
 
-        ImportError is raised on failure.
+        :exc:`ImportError` is raised on failure.
 
-        This method is deprecated in favor of loader.exec_module(). If
-        exec_module() exists then it is used to provide a backwards-compatible
-        functionality for this method.
+        .. deprecated:: 3.5
+            Use :func:`loader.exec_module()`. If exec_module() exists then
+            it is used to provide a backwards-compatible functionality for
+            this method.
 
         """
         if not hasattr(self, 'exec_module'):
@@ -173,7 +173,7 @@ class Loader(metaclass=abc.ABCMeta):
         Used by the module type when the method does not raise
         NotImplementedError.
 
-        This method is deprecated.
+        .. deprecated:: 3.4
 
         """
         # The exception will cause ModuleType.__repr__ to ignore this method.
@@ -185,7 +185,7 @@ class ResourceLoader(Loader):
     """Abstract base class for loaders which can return data from their
     back-end storage.
 
-    This ABC represents one of the optional protocols specified by PEP 302.
+    This ABC represents one of the optional protocols specified by :pep:`302`.
 
     """
 
@@ -201,7 +201,7 @@ class InspectLoader(Loader):
     """Abstract base class for loaders which support inspection about the
     modules they can load.
 
-    This ABC represents one of the optional protocols specified by PEP 302.
+    This ABC represents one of the optional protocols specified by :pep:`302`.
 
     """
 
@@ -209,16 +209,16 @@ class InspectLoader(Loader):
         """Optional method which when implemented should return whether the
         module is a package.  The fullname is a str.  Returns a bool.
 
-        Raises ImportError if the module cannot be found.
+        Raises :exc:`ImportError` if the module cannot be found.
         """
         raise ImportError
 
     def get_code(self, fullname):
         """Method which returns the code object for the module.
 
-        The fullname is a str.  Returns a types.CodeType if possible, else
+        The fullname is a str.  Returns a :attr:`types.CodeType` if possible, else
         returns None if a code object does not make sense
-        (e.g. built-in module). Raises ImportError if the module cannot be
+        (e.g. built-in module). Raises :exc:`ImportError` if the module cannot be
         found.
         """
         source = self.get_source(fullname)
@@ -231,7 +231,7 @@ class InspectLoader(Loader):
         """Abstract method which should return the source code for the
         module.  The fullname is a str.  Returns a str.
 
-        Raises ImportError if the module cannot be found.
+        Raises :exc:`ImportError` if the module cannot be found.
         """
         raise ImportError
 
@@ -254,7 +254,7 @@ class ExecutionLoader(InspectLoader):
     """Abstract base class for loaders that wish to support the execution of
     modules as scripts.
 
-    This ABC represents one of the optional protocols specified in PEP 302.
+    This ABC represents one of the optional protocols specified in :pep:`302`.
 
     """
 
@@ -263,7 +263,7 @@ class ExecutionLoader(InspectLoader):
         """Abstract method which should return the value that __file__ is to be
         set to.
 
-        Raises ImportError if the module cannot be found.
+        Raises :exc:`ImportError` if the module cannot be found.
         """
         raise ImportError
 
@@ -271,7 +271,7 @@ class ExecutionLoader(InspectLoader):
         """Method to return the code object for fullname.
 
         Should return None if not applicable (e.g. built-in module).
-        Raise ImportError if the module cannot be found.
+        Raise :exc:`ImportError` if the module cannot be found.
         """
         source = self.get_source(fullname)
         if source is None:
@@ -370,7 +370,7 @@ class ResourceReader(metaclass=abc.ABCMeta):
         and thus not contain any subdirectory components.
 
         If the resource does not exist on the file system, raise
-        FileNotFoundError.
+        :exc:`FileNotFoundError`.
         """
         raise FileNotFoundError
 
