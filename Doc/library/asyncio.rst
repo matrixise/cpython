@@ -20,6 +20,22 @@
        # Python 3.7+
        asyncio.run(main())
 
+.. sidebar:: via the command line
+
+    ::
+
+        # script.py
+        import asyncio
+
+        async def main():
+            print('Hello ...')
+            await asyncio.sleep(1)
+            print('... World!')
+
+    ::
+
+        # python -m asyncio script:main
+
 asyncio is a library to write **concurrent** code using
 the **async/await** syntax.
 
