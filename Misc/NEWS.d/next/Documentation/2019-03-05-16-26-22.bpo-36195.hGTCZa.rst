@@ -1,0 +1,2 @@
+Remove the documentation of initializer of the list of parameters of
+ThreadPoolExecutor. Contributed by Stéphane Wirtel
