@@ -1,8 +1,13 @@
+import sys
 import unittest
 
 import dublin
 
+functional = True
 
+not_implemented = unittest.skip('not implemented')
+
+# @unittest.skipIf(functional, "functional")
 class DublinTests(unittest.TestCase):
     def test_doc(self):
         self.assertEqual(dublin.__doc__, "Dublin Module")
@@ -10,7 +15,7 @@ class DublinTests(unittest.TestCase):
     def test_types(self):
         self.assertIn("Whisky", dublin.__dict__)
 
-
+# @unittest.skipIf(functional, "functional")
 class WhiskyTests(unittest.TestCase):
     def test_doc(self):
         self.assertEqual(dublin.Whisky.__doc__, "Whisky object")
@@ -18,7 +23,8 @@ class WhiskyTests(unittest.TestCase):
     def test_constructor(self):
         whisky = dublin.Whisky()
         self.assertIsNotNone(whisky.uuid)
-        self.assertTrue(whisky.uuid.startswith("UUID: Whisky:"))
+        self.assertEqual(2, sys.getrefcount(whisky.uuid))
+        self.assertTrue(whisky.uuid.startswith("UUID: "))
         self.assertIsNone(whisky.name)
 
     def test_constructor_with_name(self):
@@ -45,5 +51,15 @@ class WhiskyTests(unittest.TestCase):
 
     def test_has_classmethod_from_tuple(self):
         self.assertIn("from_tuple", dublin.Whisky.__dict__)
-        with self.assertRaises(NotImplementedError):
-            dublin.Whisky.from_tuple()
+        self.assertEqual(dublin.Whisky.from_tuple.__doc__, "Convert a tuple to a Whisky")
+
+    # @unittest.skip('not yet implemented')
+    def test_call_classmethod_from_tuple(self):
+        whisky = dublin.Whisky.from_tuple(('Teeling',))
+        assert isinstance(whisky, dublin.Whisky)
+        self.assertEqual(whisky.name, 'Teeling')
+
+    def test_new_whisky(self):
+        whisky = dublin.new_whisky()
+        self.assertTrue(str(whisky).startswith("<Whisky uuid='UUID:"))
+        self.assertEqual(whisky.name, "Teeling")
