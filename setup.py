@@ -1658,6 +1658,7 @@ class PyBuildExt(build_ext):
             self.missing.append('_tkinter')
         self.detect_uuid()
 
+        self.add(Extension('dublin', ['dublinmodule.c']))
 ##         # Uncomment these lines if you want to play with xxmodule.c
 ##         self.add(Extension('xx', ['xxmodule.c']))
 
