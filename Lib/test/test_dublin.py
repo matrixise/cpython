@@ -63,3 +63,28 @@ class WhiskyTests(unittest.TestCase):
         whisky = dublin.new_whisky()
         self.assertTrue(str(whisky).startswith("<Whisky uuid='UUID:"))
         self.assertEqual(whisky.name, "Teeling")
+
+
+class TestWithSQLITE(unittest.TestCase):
+    def setUp(self):
+        import sqlite3
+        self.conn = sqlite3.connect(':memory:')
+        cur = self.conn.cursor()
+        cur.execute("CREATE TABLE whiskies (name text)")
+        cur.executemany("INSERT INTO whiskies VALUES (?)", [('Teeling',), ('Jameson',)])
+        self.conn.commit()
+        cur.close()
+
+    def tearDown(self):
+        self.conn.close()
+
+    def test_sqlite(self):
+        cur = self.conn.cursor()
+        cur.execute('SELECT name FROM whiskies')
+        whiskies = []
+        for row in cur.fetchall():
+            whiskies.append(dublin.Whisky.from_tuple(row))
+        self.assertEqual(len(whiskies), 2)
+        self.assertEqual(whiskies[0].name, 'Teeling')
+        self.assertEqual(whiskies[1].name, 'Jameson')
+        cur.close()
