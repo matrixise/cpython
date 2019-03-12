@@ -13,57 +13,64 @@ class DublinTests(unittest.TestCase):
         self.assertEqual(dublin.__doc__, "Dublin Module")
 
     def test_types(self):
-        self.assertIn("Whisky", dublin.__dict__)
+        self.assertIn("Whiskey", dublin.__dict__)
 
 # @unittest.skipIf(functional, "functional")
-class WhiskyTests(unittest.TestCase):
+class TestConstructor(unittest.TestCase):
     def test_doc(self):
-        self.assertEqual(dublin.Whisky.__doc__, "Whisky object")
+        self.assertEqual(dublin.Whiskey.__doc__, "Whiskey object")
 
     def test_constructor(self):
-        whisky = dublin.Whisky()
-        self.assertIsNotNone(whisky.uuid)
-        self.assertEqual(2, sys.getrefcount(whisky.uuid))
-        self.assertTrue(whisky.uuid.startswith("UUID: "))
-        self.assertIsNone(whisky.name)
+        whiskey = dublin.Whiskey()
+        self.assertIsNotNone(whiskey.uuid)
+        self.assertEqual(2, sys.getrefcount(whiskey.uuid))
+        self.assertTrue(whiskey.uuid.startswith("UUID: "))
+        self.assertIsNone(whiskey.name)
 
     def test_constructor_with_name(self):
-        whisky = dublin.Whisky(name="Teeling")
+        whiskey = dublin.Whiskey(name="Teeling")
 
     def test_constructor_typing_name(self):
         with self.assertRaises(TypeError):
-            dublin.Whisky(name=123456789)
+            dublin.Whiskey(name=123456789)
 
+class TestAttributes(unittest.TestCase):
     def test_uuid_is_readonly(self):
-        whisky = dublin.Whisky()
+        whiskey = dublin.Whiskey()
         with self.assertRaisesRegex(AttributeError, "readonly attribute"):
-            whisky.uuid = "overriding uuid value"
+            whiskey.uuid = "overriding uuid value"
 
     def test_access_to_name_attribute(self):
-        whisky = dublin.Whisky(name="Teeling")
-        self.assertEqual(whisky.name, "Teeling")
+        whiskey = dublin.Whiskey(name="Teeling")
+        self.assertEqual(whiskey.name, "Teeling")
 
     def test_access_write_to_name_attribute(self):
-        whisky = dublin.Whisky()
-        self.assertIsNone(whisky.name)
-        whisky.name = "Teeling"
-        self.assertEqual(whisky.name, "Teeling")
+        whiskey = dublin.Whiskey()
+        self.assertIsNone(whiskey.name)
+        whiskey.name = "Teeling"
+        self.assertEqual(whiskey.name, "Teeling")
 
+class TestClassMethod(unittest.TestCase):
     def test_has_classmethod_from_tuple(self):
-        self.assertIn("from_tuple", dublin.Whisky.__dict__)
-        self.assertEqual(dublin.Whisky.from_tuple.__doc__, "Convert a tuple to a Whisky")
+        self.assertIn("from_tuple", dublin.Whiskey.__dict__)
+        self.assertEqual(dublin.Whiskey.from_tuple.__doc__, "Convert a tuple to a Whiskey")
 
-    # @unittest.skip('not yet implemented')
     def test_call_classmethod_from_tuple(self):
-        whisky = dublin.Whisky.from_tuple(('Teeling',))
-        assert isinstance(whisky, dublin.Whisky)
-        self.assertEqual(whisky.name, 'Teeling')
+        whiskey = dublin.Whiskey.from_tuple(('Teeling',))
+        assert isinstance(whiskey, dublin.Whiskey)
+        self.assertEqual(whiskey.name, 'Teeling')
 
+class TestModuleFunction(unittest.TestCase):
     def test_new_whisky(self):
-        whisky = dublin.new_whisky()
-        self.assertTrue(str(whisky).startswith("<Whisky uuid='UUID:"))
-        self.assertEqual(whisky.name, "Teeling")
+        whiskey = dublin.new_whiskey()
+        self.assertTrue(str(whiskey).startswith("<Whiskey uuid='UUID:"))
+        self.assertEqual(whiskey.name, "Teeling")
 
+
+
+class TestWebsiteOfWhisky(unittest.TestCase):
+    def test_website(self):
+        whiskey = dublin.Whiskey(name='Teeling')
 
 class TestWithSQLITE(unittest.TestCase):
     def setUp(self):
@@ -83,8 +90,30 @@ class TestWithSQLITE(unittest.TestCase):
         cur.execute('SELECT name FROM whiskies')
         whiskies = []
         for row in cur.fetchall():
-            whiskies.append(dublin.Whisky.from_tuple(row))
+            whiskies.append(dublin.Whiskey.from_tuple(row))
         self.assertEqual(len(whiskies), 2)
         self.assertEqual(whiskies[0].name, 'Teeling')
         self.assertEqual(whiskies[1].name, 'Jameson')
         cur.close()
+
+class TestWithCSV(unittest.TestCase):
+    def setUp(self):
+        import csv
+        import io
+        self.strio = io.StringIO()
+        writer = csv.writer(self.strio)
+        writer.writerow(['Teeling'])
+        writer.writerow(['Jameson'])
+        self.strio.seek(0)
+
+    def tearDown(self):
+        self.strio.close()
+
+    def test_from_tuple(self):
+        import csv
+        whiskies = []
+        for row in csv.reader(self.strio):
+            whiskies.append(dublin.Whiskey.from_tuple(tuple(row)))
+        self.assertEqual(len(whiskies), 2)
+        self.assertEqual(whiskies[0].name, 'Teeling')
+        self.assertEqual(whiskies[1].name, 'Jameson')
