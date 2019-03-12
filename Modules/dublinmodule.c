@@ -138,7 +138,9 @@ static PyMethodDef dublin_methods[] = {
 PyDoc_STRVAR(
     dublin_module__doc__,
     "Dublin Module\n"
-    "Website of the Irish Whiskey Museum in Dublin: https://www.irishwhiskeymuseum.ie/"
+    "Website of Dublin: http://www.dublincity.ie/\n"
+    "You love the Irish Whiskey -> Irish Whiskey Museum: https://www.irishwhiskeymuseum.ie/\n"
+    "and I am a fan of the Teeling Distillery ;-)"
 );
 
 static PyModuleDef dublin_module = {
