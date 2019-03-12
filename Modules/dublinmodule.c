@@ -12,9 +12,9 @@ static PyTypeObject Whiskey_Type;
 #define WhiskeyObject_Check(v)       (Py_TYPE(v) == &Whiskey_Type)
 
 static PyObject *
-Whiskey_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
+Whiskey_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    WhiskeyObject *self = (WhiskeyObject *) PyType_GenericNew(type, args, kwargs);
+    WhiskeyObject *self = (WhiskeyObject *) PyType_GenericNew(type, args, kwds);
     if (self == NULL) {
         return NULL;
     }
@@ -29,7 +29,7 @@ Whiskey_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
 }
 
 static int
-Whiskey_init(WhiskeyObject *self, PyObject *args, PyObject *kwargs)
+Whiskey_init(WhiskeyObject *self, PyObject *args, PyObject *kwds)
 {
     static char *keyword_list[] = {
         "name", NULL
@@ -37,7 +37,7 @@ Whiskey_init(WhiskeyObject *self, PyObject *args, PyObject *kwargs)
 
     PyObject *whisky_name = NULL;
 
-    if(!PyArg_ParseTupleAndKeywords(args, kwargs, "|O", keyword_list, &whisky_name)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "|O", keyword_list, &whisky_name)) {
         return -1;
     }
 
@@ -117,7 +117,7 @@ static PyTypeObject Whiskey_Type = {
 };
 
 static PyObject *
-dublin_new_whisky(PyObject *module, PyObject *args)
+dublin_new_whiskey(PyObject *module, PyObject *args)
 {
     PyObject *argList = Py_BuildValue("(s)", "Teeling");
     PyObject *whiskey = PyObject_CallObject((PyObject *) &Whiskey_Type, argList);
@@ -125,12 +125,87 @@ dublin_new_whisky(PyObject *module, PyObject *args)
     return whiskey;
 }
 
+
+typedef struct {
+    PyObject_HEAD;
+    PyObject *name;
+    PyObject *start_on;
+    PyObject *stop_on;
+} PyConObject;
+
+static PyTypeObject PyCon_Type;
+
+static int
+PyCon_init(PyConObject *self, PyObject *args, PyObject *kwds)
+{
+    return 0;
+}
+
+static void
+PyCon_dealloc(PyConObject *self)
+{
+    Py_XDECREF(self->name);
+    Py_XDECREF(self->start_on);
+    Py_XDECREF(self->stop_on);
+    PyObject_Del(self);
+}
+
+static PyMemberDef PyCon_members[] = {
+    {"name", T_OBJECT, offsetof(PyConObject, name), READONLY, "Name"},
+    {"start_on", T_OBJECT, offsetof(PyConObject, start_on), READONLY, "Start"},
+    {"finish_on", T_OBJECT, offsetof(PyConObject, stop_on), READONLY, "Finish"},
+    {NULL},
+};
+
+static PyTypeObject PyCon_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_doc = "PyCon object",
+    .tp_name = "dublin.PyCon",
+    .tp_basicsize = sizeof(PyConObject),
+    .tp_itemsize = 0,
+    .tp_new = NULL,
+    .tp_init = (initproc) PyCon_init,
+    .tp_dealloc = (destructor) PyCon_dealloc,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_members = PyCon_members
+};
+
+static PyObject *
+dublin_pycons(PyObject *module, PyObject *Py_UNUSED(ignored))
+{
+    PyObject *obj = NULL;
+
+    obj = PyList_New(0);
+    if (obj == NULL) {
+        return NULL;
+    }
+
+    PyObject *pycon = PyType_GenericNew(&PyCon_Type, NULL, NULL);
+    if (pycon == NULL) {
+        Py_DECREF(obj);
+        return NULL;
+    }
+    PyCon_init((PyConObject *) pycon, NULL, NULL);
+    if (PyList_Append(obj, pycon) < 0) {
+        Py_DECREF(obj);
+        return NULL;
+    }
+    Py_DECREF(pycon);
+    return obj;
+}
+
 static PyMethodDef dublin_methods[] = {
     {
         "new_whiskey",
-        (PyCFunction) dublin_new_whisky,
+        (PyCFunction) dublin_new_whiskey,
         METH_NOARGS,
         PyDoc_STR("New Whiskey")
+    },
+    {
+        "pycons",
+        (PyCFunction) dublin_pycons,
+        METH_NOARGS,
+        PyDoc_STR("Get the PyCons in Dublin")
     },
     {NULL},
 };
@@ -165,11 +240,19 @@ PyInit_dublin(void)
         return NULL;
     }
 
+    if (PyType_Ready(&PyCon_Type) < 0) {
+        return NULL;
+    }
+
     module = PyModule_Create(&dublin_module);
     if (module == NULL) {
         return NULL;
     }
     Py_INCREF(&Whiskey_Type);
     PyModule_AddObject(module, "Whiskey", (PyObject *) &Whiskey_Type);
+
+    Py_INCREF(&PyCon_Type);
+    PyModule_AddObject(module, "PyCon", (PyObject *) &PyCon_Type);
+
     return module;
 }

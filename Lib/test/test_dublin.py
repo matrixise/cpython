@@ -3,19 +3,15 @@ import unittest
 
 import dublin
 
-functional = True
+bypass = unittest.skip('by_pass')
 
-not_implemented = unittest.skip('not implemented')
-
-# @unittest.skipIf(functional, "functional")
 class DublinTests(unittest.TestCase):
     def test_doc(self):
-        self.assertEqual(dublin.__doc__, "Dublin Module")
+        self.assertTrue(dublin.__doc__.startswith("Dublin Module"))
 
     def test_types(self):
         self.assertIn("Whiskey", dublin.__dict__)
 
-# @unittest.skipIf(functional, "functional")
 class TestConstructor(unittest.TestCase):
     def test_doc(self):
         self.assertEqual(dublin.Whiskey.__doc__, "Whiskey object")
@@ -53,7 +49,7 @@ class TestAttributes(unittest.TestCase):
 class TestClassMethod(unittest.TestCase):
     def test_has_classmethod_from_tuple(self):
         self.assertIn("from_tuple", dublin.Whiskey.__dict__)
-        self.assertEqual(dublin.Whiskey.from_tuple.__doc__, "Convert a tuple to a Whiskey")
+        self.assertTrue(dublin.Whiskey.from_tuple.__doc__.startswith("Convert a tuple to a Whiskey"))
 
     def test_call_classmethod_from_tuple(self):
         whiskey = dublin.Whiskey.from_tuple(('Teeling',))
@@ -65,12 +61,6 @@ class TestModuleFunction(unittest.TestCase):
         whiskey = dublin.new_whiskey()
         self.assertTrue(str(whiskey).startswith("<Whiskey uuid='UUID:"))
         self.assertEqual(whiskey.name, "Teeling")
-
-
-
-class TestWebsiteOfWhisky(unittest.TestCase):
-    def test_website(self):
-        whiskey = dublin.Whiskey(name='Teeling')
 
 class TestWithSQLITE(unittest.TestCase):
     def setUp(self):
@@ -117,3 +107,14 @@ class TestWithCSV(unittest.TestCase):
         self.assertEqual(len(whiskies), 2)
         self.assertEqual(whiskies[0].name, 'Teeling')
         self.assertEqual(whiskies[1].name, 'Jameson')
+
+
+class TestPyCons(unittest.TestCase):
+    def test(self):
+        pycons = dublin.pycons()
+        self.assertIsInstance(pycons, list)
+        self.assertEqual(len(pycons), 1)
+        pycon = pycons[0]
+        self.assertIsInstance(pycon, dublin.PyCon)
+        with self.assertRaisesRegex(AttributeError, "readonly attribute"):
+            pycon.start_on = 42
