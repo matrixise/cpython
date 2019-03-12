@@ -72,7 +72,7 @@ Whiskey_str(PyObject *self)
 }
 
 static PyMemberDef Whiskey_members[] = {
-    {"uuid", T_OBJECT, offsetof(WhiskeyObject, uuid), READONLY, "Readonly Identifier"},
+    {"uuid", T_OBJECT, offsetof(WhiskeyObject, uuid), READONLY, "Generated Identifier - READONLY"},
     {"name", T_OBJECT, offsetof(WhiskeyObject, name), READWRITE, "Whiskey name"},
     {NULL} // Sentinel
 };
@@ -87,7 +87,8 @@ Whiskey_from_tuple(PyTypeObject *type, PyObject *args, PyObject *Py_UNUSED(ignor
 
 PyDoc_STRVAR(
     Whiskey_from_tuple__doc__,
-    "Convert a tuple to a Whiskey"
+    "Convert a tuple to a Whiskey\n"
+    ">>> whiskey = Whiskey.from_tuple(('Teeling',)"
 );
 
 static PyMethodDef Whiskey_methods[] = {
@@ -136,7 +137,8 @@ static PyMethodDef dublin_methods[] = {
 
 PyDoc_STRVAR(
     dublin_module__doc__,
-    "Dublin Module"
+    "Dublin Module\n"
+    "Website of the Irish Whiskey Museum in Dublin: https://www.irishwhiskeymuseum.ie/"
 );
 
 static PyModuleDef dublin_module = {
