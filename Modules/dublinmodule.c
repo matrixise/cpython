@@ -214,7 +214,7 @@ dublin_load_pycons(PyObject *module, PyObject *args)
     }
 
     // // _Py_IDENTIFIER();
-    connection = PyObject_CallMethod(sqlite, "connect", "s", "/tmp/irish.db");
+    connection = PyObject_CallMethod(sqlite, "connect", "O", args);
     if (connection == NULL) {
         goto Done;
     }
@@ -228,9 +228,12 @@ dublin_load_pycons(PyObject *module, PyObject *args)
 
     // fprintf(stderr, "\ncursor(before): %p %ld\n", cursor, Py_REFCNT(cursor));
     result = PyObject_CallMethod(cursor, "execute", "s", "SELECT id, name FROM whiskies");
-    if (PyErr_Occurred()) {
-        Py_DECREF(result);
-        goto Done;
+    if (!result || PyErr_Occurred()) {
+        Py_DECREF(cursor);
+        Py_DECREF(connection);
+        return NULL;
+        // Py_XDECREF(result);
+        // goto Done;
     }
     // fprintf(stderr, "cursor(after): %p %ld\n", cursor, Py_REFCNT(cursor));
     // fprintf(stderr, "result: %p %ld\n", result, Py_REFCNT(result));

@@ -133,12 +133,17 @@ class TestPyCons(unittest.TestCase):
 
 
 class TestLoadPyCons(unittest.TestCase):
-    def test_only_accepts_string(self):
+    def test_reject_type_other_string(self):
+        with self.assertRaises(TypeError):
+            dublin.load_pycons(1)
+
+    def test_can_read_database(self):
         pycons = dublin.load_pycons("/tmp/irish.db")
         self.assertIsNotNone(pycons)
         self.assertEqual(len(pycons), 2)
         self.assertTrue(all(isinstance(instance, dublin.PyCon) for instance in pycons))
 
-    def test_reject_other_types(self):
-        with self.assertRaises(TypeError):
-            dublin.load_pycons(1)
+    def test_cannot_read_database(self):
+        import sqlite3
+        with self.assertRaises(sqlite3.OperationalError):
+            pycons = dublin.load_pycons("/tmp/ireland.db")
