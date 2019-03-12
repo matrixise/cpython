@@ -194,6 +194,18 @@ dublin_pycons(PyObject *module, PyObject *Py_UNUSED(ignored))
     return obj;
 }
 
+static PyObject *
+dublin_load_pycons(PyObject *module, PyObject *args)
+{
+    if (!PyUnicode_CheckExact(args)) {
+        PyErr_SetString(PyExc_TypeError, "filename must be a string");
+        Py_DECREF(args);
+        return NULL;
+    }
+    // PyErr_SetString(PyExc_NotImplementedError, )
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef dublin_methods[] = {
     {
         "new_whiskey",
@@ -205,7 +217,13 @@ static PyMethodDef dublin_methods[] = {
         "pycons",
         (PyCFunction) dublin_pycons,
         METH_NOARGS,
-        PyDoc_STR("Get the PyCons in Dublin")
+        PyDoc_STR("Get the PyCons in Ireland")
+    },
+    {
+        "load_pycons",
+        (PyCFunction) dublin_load_pycons,
+        METH_O,
+        PyDoc_STR("Get the PyCons from a file")
     },
     {NULL},
 };

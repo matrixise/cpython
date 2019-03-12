@@ -118,3 +118,12 @@ class TestPyCons(unittest.TestCase):
         self.assertIsInstance(pycon, dublin.PyCon)
         with self.assertRaisesRegex(AttributeError, "readonly attribute"):
             pycon.start_on = 42
+
+class TestLoadPyCons(unittest.TestCase):
+    def test_only_accepts_string(self):
+        pycons = dublin.load_pycons("/tmp/pycons.csv")
+        self.assertIsNone(pycons)
+
+    def test_reject_other_types(self):
+        with self.assertRaises(TypeError):
+            dublin.load_pycons(1)
