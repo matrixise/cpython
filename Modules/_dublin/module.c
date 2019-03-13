@@ -129,6 +129,13 @@ dublin_load_pycons(PyObject *module, PyObject *args)
     return result;
 }
 
+static PyObject *
+dublin_dummy_function(PyObject *module, PyObject *Py_UNUSED(ignored))
+{
+    PyErr_SetString(PyExc_NotImplementedError, "Not yet implemented");
+    return NULL;
+}
+
 PyDoc_STRVAR(dublin_load_pycons__doc__,
 "load_pycons(filename)\n\
 \n\
@@ -152,6 +159,12 @@ static PyMethodDef dublin_methods[] = {
         (PyCFunction) dublin_load_pycons,
         METH_O,
         dublin_load_pycons__doc__
+    },
+    {
+        "dummy_function",
+        (PyCFunction) dublin_dummy_function,
+        METH_NOARGS,
+        NULL,
     },
     {NULL},
 };

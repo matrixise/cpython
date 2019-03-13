@@ -157,3 +157,11 @@ class TestLoadPyCons(unittest.TestCase):
         import sqlite3
         with self.assertRaises(sqlite3.OperationalError):
             pycons = dublin.load_pycons("/tmp/ireland.db")
+
+class DublinDummyFunctionTests(unittest.TestCase):
+    def test_has_dummy_function(self):
+        self.assertIn('dummy_function', dublin.__dict__)
+
+    def test_raise_exception(self):
+        with self.assertRaises(NotImplementedError):
+            dublin.dummy_function()
