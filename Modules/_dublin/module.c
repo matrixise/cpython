@@ -143,10 +143,10 @@ load the PyCons from a SQLite3 database");
 
 static PyMethodDef dublin_methods[] = {
     {
-        "new_whiskey",
-        (PyCFunction) dublin_new_whiskey,
-        METH_NOARGS,
-        dublin_new_whiskey__doc__
+        .ml_name = "new_whiskey",
+        .ml_meth = (PyCFunction) dublin_new_whiskey,
+        .ml_flags = METH_NOARGS,
+        .ml_doc = dublin_new_whiskey__doc__
     },
     {
         "pycons",
