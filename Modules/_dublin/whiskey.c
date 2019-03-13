@@ -82,12 +82,33 @@ Whiskey_from_tuple__doc__,
 Convert a tuple to a Whiskey\n\
 >>> whiskey = Whiskey.from_tuple(('Teeling',)");
 
+static PyObject *
+Whiskey_i_love_this(WhiskeyObject *self, PyObject *Py_UNUSED(ignored))
+{
+    assert(self->name);
+    assert(PyUnicode_Check(self->name));
+    return PyUnicode_FromFormat("I love the %S Whiskey ;-)", self->name);
+}
+
+PyDoc_STRVAR(
+Whiskey_i_love_this__doc__,
+"i_love_this()\n\
+\n\
+Return a new string with 'I love the %s Whiskey ;-)'");
+
+
 static PyMethodDef Whiskey_methods[] = {
     {
         "from_tuple",
         (PyCFunction)(void(*)(void)) Whiskey_from_tuple,
         METH_VARARGS | METH_CLASS,
         Whiskey_from_tuple__doc__
+    },
+    {
+        "i_love_this",
+        (PyCFunction) Whiskey_i_love_this,
+        METH_NOARGS,
+        Whiskey_i_love_this__doc__
     },
     {NULL} // Sentinel
 };

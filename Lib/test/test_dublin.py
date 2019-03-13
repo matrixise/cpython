@@ -165,3 +165,10 @@ class DublinDummyFunctionTests(unittest.TestCase):
     def test_raise_exception(self):
         with self.assertRaises(NotImplementedError):
             dublin.dummy_function()
+
+
+class ILoveThisTests(unittest.TestCase):
+    def test(self):
+        whiskey = dublin.Whiskey(name='Teeling')
+        res = whiskey.i_love_this()
+        self.assertEqual(res, "I love the Teeling Whiskey ;-)")
