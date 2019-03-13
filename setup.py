@@ -1657,14 +1657,25 @@ class PyBuildExt(build_ext):
         if not self.detect_tkinter():
             self.missing.append('_tkinter')
         self.detect_uuid()
+        self.detect_dublin()
 
-        self.add(Extension('dublin', ['dublinmodule.c']))
 ##         # Uncomment these lines if you want to play with xxmodule.c
 ##         self.add(Extension('xx', ['xxmodule.c']))
 
         if 'd' not in sysconfig.get_config_var('ABIFLAGS'):
             self.add(Extension('xxlimited', ['xxlimited.c'],
                                define_macros=[('Py_LIMITED_API', '0x03050000')]))
+
+    def detect_dublin(self):
+        include_dirs = ['Modules/_dublin']
+
+        dublin_srcs = [
+            '_dublin/whiskey.c',
+            '_dublin/pycon.c',
+            '_dublin/module.c'
+        ]
+
+        self.add(Extension('dublin', dublin_srcs, include_dirs=include_dirs))
 
     def detect_tkinter_explicitly(self):
         # Build _tkinter using explicit locations for Tcl/Tk.
