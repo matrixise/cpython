@@ -77,10 +77,11 @@ Whiskey_from_tuple(PyTypeObject *type, PyObject *args, PyObject *Py_UNUSED(ignor
 }
 
 PyDoc_STRVAR(
-    Whiskey_from_tuple__doc__,
-    "Convert a tuple to a Whiskey\n"
-    ">>> whiskey = Whiskey.from_tuple(('Teeling',)"
-);
+Whiskey_from_tuple__doc__,
+"Whiskey.from_tuple(tuple)\n\
+\n\
+Convert a tuple to a Whiskey\n\
+>>> whiskey = Whiskey.from_tuple(('Teeling',)");
 
 static PyMethodDef Whiskey_methods[] = {
     {

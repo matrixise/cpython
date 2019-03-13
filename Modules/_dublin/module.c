@@ -12,6 +12,11 @@ dublin_new_whiskey(PyObject *module, PyObject *args)
     return whiskey;
 }
 
+PyDoc_STRVAR(dublin_new_whiskey__doc__,
+"new_whiskey()\n\
+\n\
+Instanciate a new whiskey");
+
 static PyObject *
 dublin_pycons(PyObject *module, PyObject *Py_UNUSED(ignored))
 {
@@ -35,6 +40,11 @@ dublin_pycons(PyObject *module, PyObject *Py_UNUSED(ignored))
     Py_DECREF(pycon);
     return obj;
 }
+
+PyDoc_STRVAR(dublin_pycons__doc__,
+"pycons()\n\
+\n\
+Return a list of one dublin.PyCon");
 
 static PyObject *
 dublin_load_pycons(PyObject *module, PyObject *args)
@@ -119,25 +129,29 @@ dublin_load_pycons(PyObject *module, PyObject *args)
     return result;
 }
 
+PyDoc_STRVAR(dublin_load_pycons__doc__,
+"load_pycons(filename)\n\
+\n\
+load the PyCons from a SQLite3 database");
 
 static PyMethodDef dublin_methods[] = {
     {
         "new_whiskey",
         (PyCFunction) dublin_new_whiskey,
         METH_NOARGS,
-        PyDoc_STR("New Whiskey")
+        dublin_new_whiskey__doc__
     },
     {
         "pycons",
         (PyCFunction) dublin_pycons,
         METH_NOARGS,
-        PyDoc_STR("Get the PyCons in Ireland")
+        dublin_pycons__doc__
     },
     {
         "load_pycons",
         (PyCFunction) dublin_load_pycons,
         METH_O,
-        PyDoc_STR("Get the PyCons from a file")
+        dublin_load_pycons__doc__
     },
     {NULL},
 };

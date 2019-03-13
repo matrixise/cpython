@@ -54,7 +54,7 @@ class TestClassMethod(unittest.TestCase):
     def test_has_classmethod_from_tuple(self):
         self.assertIn("from_tuple", dublin.Whiskey.__dict__)
         self.assertTrue(
-            dublin.Whiskey.from_tuple.__doc__.startswith("Convert a tuple to a Whiskey")
+            dublin.Whiskey.from_tuple.__doc__.startswith("Whiskey.from_tuple")
         )
 
     def test_call_classmethod_from_tuple(self):
