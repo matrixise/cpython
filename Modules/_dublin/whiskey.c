@@ -54,9 +54,8 @@ Whiskey_dealloc(WhiskeyObject *self)
 }
 
 static PyObject *
-Whiskey_str(PyObject *self)
+Whiskey_str(WhiskeyObject *obj)
 {
-    WhiskeyObject *obj = (WhiskeyObject *)self;
     return PyUnicode_FromFormat("<Whiskey uuid='%S' - name='%S'>",
                                 obj->uuid,
                                 obj->name);
@@ -105,5 +104,5 @@ PyTypeObject dublin_WhiskeyType = {
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_members = Whiskey_members,
     .tp_methods = Whiskey_methods,
-    .tp_str = Whiskey_str,
+    .tp_str = (reprfunc) Whiskey_str,
 };
