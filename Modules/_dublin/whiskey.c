@@ -92,6 +92,27 @@ static PyMethodDef Whiskey_methods[] = {
     {NULL} // Sentinel
 };
 
+static PyObject*
+Whiskey_lower_name(WhiskeyObject *self, void *closure)
+{
+    assert(self->name);
+    assert(PyUnicode_Check(self->name));
+
+    return PyObject_CallMethod(self->name, "lower", "()");
+}
+
+static PyGetSetDef Whiskey_getsetters[] = {
+    {
+        "lower_name",
+        (getter) Whiskey_lower_name,
+        NULL,
+        PyDoc_STR("Return the Whiskey name in lower case"),
+        NULL,
+    },
+    {NULL}
+};
+
+
 PyTypeObject dublin_WhiskeyType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_doc = "Whiskey object",
@@ -105,4 +126,5 @@ PyTypeObject dublin_WhiskeyType = {
     .tp_members = Whiskey_members,
     .tp_methods = Whiskey_methods,
     .tp_str = (reprfunc) Whiskey_str,
+    .tp_getset = Whiskey_getsetters
 };
