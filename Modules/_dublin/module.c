@@ -47,7 +47,6 @@ dublin_load_pycons(PyObject *module, PyObject *args)
     if (!PyUnicode_CheckExact(args)) {
         PyErr_SetString(PyExc_TypeError, "filename must be a string");
         Py_DECREF(args);
-        // Py_DECREF(args);
         return NULL;
     }
     sqlite = PyImport_ImportModuleNoBlock("sqlite3");
@@ -55,44 +54,30 @@ dublin_load_pycons(PyObject *module, PyObject *args)
         goto Done;
     }
 
-    // // _Py_IDENTIFIER();
     connection = PyObject_CallMethod(sqlite, "connect", "O", args);
     if (connection == NULL) {
         goto Done;
     }
-
-    // PyObject_Print(connection, stderr, 0);
 
     cursor = PyObject_CallMethod(connection, "cursor", "()");
     if (cursor == NULL) {
         goto Done;
     }
 
-    // fprintf(stderr, "\ncursor(before): %p %ld\n", cursor, Py_REFCNT(cursor));
     result = PyObject_CallMethod(cursor, "execute", "s", "SELECT id, name FROM whiskies");
     if (!result || PyErr_Occurred()) {
         Py_DECREF(cursor);
         Py_DECREF(connection);
         return NULL;
-        // Py_XDECREF(result);
-        // goto Done;
     }
-    // fprintf(stderr, "cursor(after): %p %ld\n", cursor, Py_REFCNT(cursor));
-    // fprintf(stderr, "result: %p %ld\n", result, Py_REFCNT(result));
-    // PyObject_Print(result, stderr, 0);
     Py_DECREF(result);
 
-    // fprintf(stderr, "cursor(before): %p %ld\n", cursor, Py_REFCNT(cursor));
     PyObject *collections = PyObject_CallMethod(cursor, "fetchall", "()");
-    // fprintf(stderr, "cursor(after): %p %ld %s\n", cursor, Py_REFCNT(cursor), Py_TYPE(cursor)->tp_name);
-    // fprintf(stderr, "collections: %p %ld %s\n", collections, Py_REFCNT(collections), Py_TYPE(collections)->tp_name);
     if (collections == NULL) {
         goto Done;
     }
 
     Py_ssize_t length = PyList_Size(collections);
-    // fprintf(stderr, "Length: %ld\n", length);
-    // PyObject_Print(collections, stderr, 0);
     result = PyList_New(0);
     if (result == NULL) {
         Py_DECREF(collections);
@@ -118,7 +103,6 @@ dublin_load_pycons(PyObject *module, PyObject *args)
 
     Done:
 
-    // Py_DECREF(result);
     if (cursor) {
         PyObject *tmp = PyObject_CallMethod(cursor, "close", "()");
         Py_DECREF(tmp);
@@ -128,12 +112,10 @@ dublin_load_pycons(PyObject *module, PyObject *args)
         PyObject *tmp = PyObject_CallMethod(connection, "close", "()");
         Py_DECREF(tmp);
     }
-    // PyObject_Print(result, stderr, 0);
 
     Py_XDECREF(cursor);
     Py_XDECREF(connection);
     Py_XDECREF(sqlite);
-    // Py_RETURN_NONE;
     return result;
 }
 
