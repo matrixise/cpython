@@ -23,7 +23,7 @@ static PyMemberDef PyCon_members[] = {
     {NULL},
 };
 
-PyTypeObject PyCon_Type = {
+PyTypeObject dublin_PyConType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_doc = "PyCon object",
     .tp_name = "dublin.PyCon",

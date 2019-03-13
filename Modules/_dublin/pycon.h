@@ -10,7 +10,7 @@ typedef struct {
     PyObject *stop_on;
 } PyConObject;
 
-extern PyTypeObject PyCon_Type;
+extern PyTypeObject dublin_PyConType;
 
 int PyCon_init(PyConObject *self, PyObject *args, PyObject *kwds);
 // void PyCon_dealloc(PyConObject *self);

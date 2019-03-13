@@ -7,7 +7,7 @@ static PyObject *
 dublin_new_whiskey(PyObject *module, PyObject *args)
 {
     PyObject *argList = Py_BuildValue("(s)", "Teeling");
-    PyObject *whiskey = PyObject_CallObject((PyObject *) &Whiskey_Type, argList);
+    PyObject *whiskey = PyObject_CallObject((PyObject *) &dublin_WhiskeyType, argList);
     Py_DECREF(argList);
     return whiskey;
 }
@@ -22,7 +22,7 @@ dublin_pycons(PyObject *module, PyObject *Py_UNUSED(ignored))
         return NULL;
     }
 
-    PyObject *pycon = PyType_GenericNew(&PyCon_Type, NULL, NULL);
+    PyObject *pycon = PyType_GenericNew(&dublin_PyConType, NULL, NULL);
     if (pycon == NULL) {
         Py_DECREF(obj);
         return NULL;
@@ -90,7 +90,7 @@ dublin_load_pycons(PyObject *module, PyObject *args)
         name = PyTuple_GetItem(item, 1);
 
         Py_INCREF(name);
-        PyConObject *pycon = (PyConObject *) PyType_GenericNew(&PyCon_Type, NULL, NULL);
+        PyConObject *pycon = (PyConObject *) PyType_GenericNew(&dublin_PyConType, NULL, NULL);
         pycon->name = name;
         PyList_Append(result, (PyObject *)pycon);
 
@@ -165,11 +165,11 @@ PyInit_dublin(void)
 {
     PyObject *module = NULL;
 
-    if (PyType_Ready(&Whiskey_Type) < 0) {
+    if (PyType_Ready(&dublin_WhiskeyType) < 0) {
         return NULL;
     }
 
-    if (PyType_Ready(&PyCon_Type) < 0) {
+    if (PyType_Ready(&dublin_PyConType) < 0) {
         return NULL;
     }
 
@@ -177,11 +177,11 @@ PyInit_dublin(void)
     if (module == NULL) {
         return NULL;
     }
-    Py_INCREF(&Whiskey_Type);
-    PyModule_AddObject(module, "Whiskey", (PyObject *) &Whiskey_Type);
+    Py_INCREF(&dublin_WhiskeyType);
+    PyModule_AddObject(module, "Whiskey", (PyObject *) &dublin_WhiskeyType);
 
-    Py_INCREF(&PyCon_Type);
-    PyModule_AddObject(module, "PyCon", (PyObject *) &PyCon_Type);
+    Py_INCREF(&dublin_PyConType);
+    PyModule_AddObject(module, "PyCon", (PyObject *) &dublin_PyConType);
 
     return module;
 }

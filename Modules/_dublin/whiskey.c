@@ -72,7 +72,7 @@ static PyObject *
 Whiskey_from_tuple(PyTypeObject *type, PyObject *args, PyObject *Py_UNUSED(ignored)) 
 {
     PyObject *name = PyTuple_GET_ITEM(args, 0);
-    PyObject *whiskey = PyObject_CallObject((PyObject *) &Whiskey_Type, name);
+    PyObject *whiskey = PyObject_CallObject((PyObject *) &dublin_WhiskeyType, name);
     return whiskey;
 }
 
@@ -92,7 +92,7 @@ static PyMethodDef Whiskey_methods[] = {
     {NULL} // Sentinel
 };
 
-PyTypeObject Whiskey_Type = {
+PyTypeObject dublin_WhiskeyType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_doc = "Whiskey object",
     .tp_name = "dublin.Whiskey",
