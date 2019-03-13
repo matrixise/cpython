@@ -13,6 +13,16 @@ class DublinTests(unittest.TestCase):
     def test_types(self):
         self.assertIn("Whiskey", dublin.__dict__)
 
+    def test_constant_version(self):
+        self.assertIn("version", dublin.__dict__)
+        self.assertIsInstance(dublin.version, str)
+        self.assertEqual(dublin.version, "0.1")
+
+    def test_constant_author(self):
+        self.assertIn("author", dublin.__dict__)
+        self.assertIsInstance(dublin.author, str)
+        self.assertEqual(dublin.author, "Stéphane Wirtel")
+
 
 class TestConstructor(unittest.TestCase):
     def test_doc(self):

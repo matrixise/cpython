@@ -197,5 +197,8 @@ PyInit_dublin(void)
     Py_INCREF(&dublin_PyConType);
     PyModule_AddObject(module, "PyCon", (PyObject *) &dublin_PyConType);
 
+    PyModule_AddStringConstant(module, "version", "0.1");
+    PyModule_AddStringConstant(module, "author", "Stéphane Wirtel");
+
     return module;
 }
