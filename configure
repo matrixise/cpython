@@ -10062,50 +10062,46 @@ fi
 
 if test "$with_sanitizer" = "yes";
 then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for malloc in -lasan" >&5
-$as_echo_n "checking for malloc in -lasan... " >&6; }
-if ${ac_cv_lib_asan_malloc+:} false; then :
+if ${ac_cv_libasan_is_installed+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lasan  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+
+CC="$CC -lasan"
+if test "$cross_compiling" = yes; then :
+  ac_cv_libasan_is_installed=no
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char malloc ();
-int
-main ()
-{
-return malloc ();
-  ;
-  return 0;
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    const char *message = NULL;
+    message = (char *) malloc(10);
+    if (message != NULL) {
+        free(message);
+    }
+    return EXIT_SUCCESS;
 }
+
 _ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_asan_malloc=yes
+if ac_fn_c_try_run "$LINENO"; then :
+  ac_cv_libasan_is_installed=yes
 else
-  ac_cv_lib_asan_malloc=no
+  ac_cv_libasan_is_installed=no
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_asan_malloc" >&5
-$as_echo "$ac_cv_lib_asan_malloc" >&6; }
-if test "x$ac_cv_lib_asan_malloc" = xyes; then :
-  LDFLAGS="-lasan $LDFLAGS"
-else
-  as_fn_error $? "libasan is not installed." "$LINENO" 5
 
 fi
 
+
 fi
+
+echo "$ac_cv_libasan_is_installed";
+exit 1
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for --with-memory-sanitizer" >&5
 $as_echo_n "checking for --with-memory-sanitizer... " >&6; }

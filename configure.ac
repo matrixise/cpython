@@ -2885,13 +2885,30 @@ with_sanitizer="yes"
 
 if test "$with_sanitizer" = "yes";
 then
-    AC_CHECK_LIB(
-	[asan],
-	[malloc],
-	[LDFLAGS="-lasan $LDFLAGS"],
-	AC_MSG_ERROR([libasan is not installed.])
-    )
+AC_CACHE_VAL(ac_cv_libasan_is_installed,
+[
+CC="$CC -lasan"
+AC_RUN_IFELSE([AC_LANG_SOURCE([[
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    const char *message = NULL;
+    message = (char *) malloc(10);
+    if (message != NULL) {
+        free(message);
+    }
+    return EXIT_SUCCESS;
+}
+]])],
+[ac_cv_libasan_is_installed=yes],
+[ac_cv_libasan_is_installed=no],
+[ac_cv_libasan_is_installed=no])])
+
 fi
+
+#echo "$ac_cv_libasan_is_installed";
+#exit 1
 
 AC_MSG_CHECKING(for --with-memory-sanitizer)
 AC_ARG_WITH(memory_sanitizer,
