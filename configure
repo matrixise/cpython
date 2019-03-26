@@ -10052,7 +10052,7 @@ BASECFLAGS="-fsanitize=address -fno-omit-frame-pointer $BASECFLAGS"
 LDFLAGS="-fsanitize=address $LDFLAGS"
 # ASan works by controlling memory allocation, our own malloc interferes.
 with_pymalloc="no"
-with_sanitizer="yes"
+# with_sanitizer="yes"
 
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -10060,8 +10060,16 @@ $as_echo "no" >&6; }
 fi
 
 
-if test "$with_sanitizer" = "yes";
-then
+# if test "$with_sanitizer" = "yes";
+# then
+# AC_CHECK_LIB(
+# [asan],
+# [malloc],
+# [LDFLAGS="-lasan $LDFLAGS"],
+# AC_MSG_WARN([libasan is not installed.])
+# )
+# fi
+
 if ${ac_cv_libasan_is_installed+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -10080,7 +10088,7 @@ int main(int argc, char *argv[]) {
     const char *message = NULL;
     message = (char *) malloc(10);
     if (message != NULL) {
-        free(message);
+        free((void *) message);
     }
     return EXIT_SUCCESS;
 }
@@ -10098,10 +10106,11 @@ fi
 fi
 
 
-fi
-
 echo "$ac_cv_libasan_is_installed";
-exit 1
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: libasan..." >&5
+$as_echo "$as_me: WARNING: libasan..." >&2;}
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_libasan_is_installed" >&5
+$as_echo "$ac_cv_libasan_is_installed" >&6; }
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for --with-memory-sanitizer" >&5
 $as_echo_n "checking for --with-memory-sanitizer... " >&6; }
