@@ -270,9 +270,19 @@ class DeprecatedRemoved(Directive):
                                                 classes=['versionmodified']),
                                    translatable=False)
             node.append(para)
-        env = self.state.document.settings.env
-        env.note_versionchange('deprecated', version[0], node, self.lineno)
+
+        node = self.deprecate_node(version[0], node)
+
         return [node] + messages
+
+    def deprecate_node(self, version, node):
+        env = self.state.document.settings.env
+        changeset = env.get_domain('changeset')
+        node['type'] = 'deprecated'
+        node['version'] = version[0]
+        node.line = self.lineno
+        changeset.note_changeset(node)
+        return node
 
 
 # Support for including Misc/NEWS
